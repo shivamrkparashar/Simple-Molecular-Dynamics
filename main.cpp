@@ -1,31 +1,24 @@
 #include <iostream>
 #include <vector>
 #include <cmath>
+#include "Vector.h"
 #include <fstream>
 
-#define random (double)rand()/RAND_MAX
+#define random ((double)rand()/RAND_MAX)  // returns random number between 0 and 1
 #define Nmax 1000
 
 using namespace std;
 
 class Particle{
 public:
-    double x;
-    double y;
-    double z;
-    double xo;
-    double yo;
-    double zo;
-    double vx;
-    double vy;
-    double vz;
-    double fx;
-    double fy;
-    double fz;
+    Vector position;
+    Vector oldPosition;
+    Vector velocity;
+    Vector force;
     double energy;
 
     double kineticEnergy(){
-        return 0.5*(vx*vx + vy*vy + vz*vz);
+        return 0.5*velocity.dot( velocity);
     }
 };
 
@@ -41,13 +34,9 @@ void initialize(vector <Particle> & particle, int nParticles, double temperature
 
     // assign initial positions randomly within the box
     for (int i=0; i<nParticles; i++){
-        particle[i].x = boxLength * random;
-        particle[i].y = boxLength * random;
-        particle[i].z = boxLength * random;
-
-        particle[i].vx = random - 0.5;
-        particle[i].vy = random - 0.5;
-        particle[i].vz = random - 0.5;
+        // these lines are valid only for implicit constructor
+        particle[i].position = boxLength*random, boxLength*random, boxLength*random;
+        particle[i].velocity = random-0.5, random-0.5, random-0.5;
 
         sumKineticEnergy += particle[i].kineticEnergy();
     }
@@ -57,45 +46,33 @@ void initialize(vector <Particle> & particle, int nParticles, double temperature
 
     // scale the velocities at the given temperature
     for (int i=0; i<nParticles; i++){
-        particle[i].vx *= velocityScaleFactor;
-        particle[i].vy *= velocityScaleFactor;
-        particle[i].vz *= velocityScaleFactor;
+        particle[i].velocity = particle[i].velocity * velocityScaleFactor;
 
         // calculate the old position
-        particle[i].xo = particle[i].x - particle[i].vx * dt;
-        particle[i].yo = particle[i].y - particle[i].vy * dt;
-        particle[i].zo = particle[i].z - particle[i].vz * dt;
+        particle[i].oldPosition = particle[i].position - particle[i].velocity*dt;
     }
 }
 
 
 void integrate(vector <Particle> & particle, int nParticles, double boxLength){
 
-    double xnew;
-    double ynew;
-    double znew;
+    Vector newPosition;
     for (int i = 0; i < nParticles; i++){
-        xnew = 2*particle[i].x - particle[i].xo;
-        ynew = 2*particle[i].y - particle[i].yo;
-        znew = 2*particle[i].z - particle[i].zo;
+        newPosition = particle[i].position * 2.0 - particle[i].oldPosition;
 
         // apply periodic boundary conditions
-        if (xnew < 0) xnew += boxLength;
-        if (ynew < 0) ynew += boxLength;
-        if (znew < 0) znew += boxLength;
-        if (xnew > boxLength) xnew -= boxLength;
-        if (ynew > boxLength) ynew -= boxLength;
-        if (znew > boxLength) znew -= boxLength;
+        if (newPosition.x < 0) newPosition.x += boxLength;
+        if (newPosition.y < 0) newPosition.y += boxLength;
+        if (newPosition.z < 0) newPosition.z += boxLength;
+        if (newPosition.x > boxLength) newPosition.x -= boxLength;
+        if (newPosition.y > boxLength) newPosition.y -= boxLength;
+        if (newPosition.z > boxLength) newPosition.z -= boxLength;
 
         // update the old positions
-        particle[i].xo = particle[i].x;
-        particle[i].yo = particle[i].y;
-        particle[i].zo = particle[i].z;
+        particle[i].oldPosition = particle[i].position;
 
         // update the current positions
-        particle[i].x = xnew;
-        particle[i].y = ynew;
-        particle[i].z = znew;
+        particle[i].position = newPosition;
     }
 }
 
@@ -106,7 +83,8 @@ void writexyz(ofstream &xyzfile,vector <Particle> & particle, int nParticles){
     xyzfile << "----" << endl;
 
     for (int i = 0; i<nParticles; i++){
-        xyzfile << "Ar  " << particle[i].x << "\t" << particle[i].y << "\t" << particle[i].z << endl;
+        // xyzfile << "Ar  " << particle[i].x << "\t" << particle[i].y << "\t" << particle[i].z << endl;
+        xyzfile << "Ar  " << particle[i].position;
     }
 
 }
