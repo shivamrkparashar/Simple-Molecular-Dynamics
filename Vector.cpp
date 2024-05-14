@@ -55,6 +55,15 @@ Vector Vector::operator*(const double &d) const {
     return result;
 }
 
+// overloading division by a scalar
+Vector Vector::operator/(const double &d) const {
+    Vector result;
+    result.x = x / d;
+    result.y = y / d;
+    result.z = z / d;
+    return result;
+}
+
 // dot product of two vectors
 double Vector::dot(const Vector &v1) const{
     return v1.x*x + v1.y*y + v1.z*z;

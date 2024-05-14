@@ -20,6 +20,7 @@ public:
     Vector operator- (const Vector &) const;
     // Vector operator* (Vector &);
     Vector operator* (const double &) const;
+    Vector operator/ (const double &) const;
 
     // [[nodiscard]]: store the return value of this function into some variable, or print
     [[nodiscard]] double dot(const Vector &) const;
