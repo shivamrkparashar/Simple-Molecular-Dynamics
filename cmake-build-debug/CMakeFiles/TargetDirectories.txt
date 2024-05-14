@@ -1,3 +1,0 @@
-/home/shivam/Desktop/SMD/cmake-build-debug/CMakeFiles/SMD.dir
-/home/shivam/Desktop/SMD/cmake-build-debug/CMakeFiles/edit_cache.dir
-/home/shivam/Desktop/SMD/cmake-build-debug/CMakeFiles/rebuild_cache.dir

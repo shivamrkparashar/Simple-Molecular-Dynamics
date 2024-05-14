@@ -1,1 +1,0 @@
-/usr/bin/c++ -g CMakeFiles/SMD.dir/main.cpp.o -o SMD 
