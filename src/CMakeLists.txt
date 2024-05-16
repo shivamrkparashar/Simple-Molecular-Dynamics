@@ -11,4 +11,8 @@ add_executable(SMD main.cpp
         energy.h
         global.h
         movies.cpp
-        movies.h)
+        movies.h
+        integrate.cpp
+        integrate.h
+        intialize.cpp
+        intialize.h)
