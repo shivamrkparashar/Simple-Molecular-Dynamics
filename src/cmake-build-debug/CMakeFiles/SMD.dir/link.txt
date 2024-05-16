@@ -1,0 +1,1 @@
+/usr/bin/c++ -g CMakeFiles/SMD.dir/main.cpp.o CMakeFiles/SMD.dir/Vector.cpp.o CMakeFiles/SMD.dir/energy.cpp.o CMakeFiles/SMD.dir/atom.cpp.o CMakeFiles/SMD.dir/movies.cpp.o -o SMD 
